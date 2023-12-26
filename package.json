@@ -2,14 +2,22 @@
   "name": "my-bookshelf",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "migrate": "bun run ./src/db/migrate.ts",
+    "dev": "bun run --watch src/http/server.ts",
+    "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/cookie": "^0.8.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "drizzle-orm": "^0.29.2",
+    "elysia": "latest",
+    "postgres": "^3.4.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "drizzle-kit": "^0.20.8",
+    "pg": "^8.11.3"
   },
   "module": "src/index.js"
 }
