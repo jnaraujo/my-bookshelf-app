@@ -5,7 +5,7 @@ import Elysia from "elysia";
 import { db } from "../../db/connection";
 import { sessions } from "../../db/schema/auth";
 
-const TWO_HOURS = 1000 * 60 * 60 * 2;
+const TWO_HOURS_IN_MS = 1000 * 60 * 60 * 2;
 
 export const authentication = new Elysia()
 	.use(cookie())
@@ -13,19 +13,26 @@ export const authentication = new Elysia()
 		return {
 			signIn: async (userId: string) => {
 				const sessionToken = createId();
-				setCookie("sessionToken", sessionToken);
+
+				setCookie("sessionToken", sessionToken, {
+					maxAge: TWO_HOURS_IN_MS / 1000,
+					httpOnly: true,
+				});
+
 				await db.insert(sessions).values({
 					sessionToken,
 					userId,
-					expires: new Date(Date.now() + TWO_HOURS),
+					expires: new Date(Date.now() + TWO_HOURS_IN_MS),
 				});
 			},
 			signOut: async () => {
 				const sessionToken = cookie.sessionToken;
+
 				if (sessionToken) {
 					await db
 						.delete(sessions)
 						.where(eq(sessions.sessionToken, sessionToken));
+
 					removeCookie("sessionToken");
 				}
 			},
@@ -61,7 +68,9 @@ export const authentication = new Elysia()
 					await db
 						.delete(sessions)
 						.where(eq(sessions.sessionToken, sessionToken));
+
 					removeCookie("sessionToken");
+
 					return {
 						isAuth: false,
 						userId: null,
