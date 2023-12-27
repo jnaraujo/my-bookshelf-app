@@ -4,7 +4,8 @@
   "scripts": {
     "migrate": "bun run ./src/db/migrate.ts",
     "dev": "bun run --watch src/http/server.ts",
-    "generate": "drizzle-kit generate:pg"
+    "generate": "drizzle-kit generate:pg",
+    "check": "biome check --apply ./src"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
@@ -15,6 +16,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.4.1",
     "bun-types": "latest",
     "drizzle-kit": "^0.20.8",
     "pg": "^8.11.3"
